@@ -12,8 +12,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableZuulProxy
 @EnableSwagger2
-@EnableJpaRepositories("com.orange.combo.gatewayservice.repositories")
-@EntityScan("com.orange.combo.gatewayservice.entities")
+@EnableJpaRepositories("com.fathy.gatewayservice.repositories")
+@EntityScan("com.fathy.gatewayservice.entities")
 public class GatewayServiceApplication {
 
 	public static void main(String[] args) {

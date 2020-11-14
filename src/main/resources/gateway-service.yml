@@ -75,7 +75,7 @@ spring:
       max-file-size: -1
       max-request-size: -1
   datasource:
-    url: jdbc:postgresql://localhost:5432/combo-deleted-user
+    url: jdbc:postgresql://localhost:5432/deleted-user
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -112,7 +112,5 @@ feign:
 
 # Spring Boot Actuator
 management.security.enabled: false
-
-auth.publicKeyName: publicKey-dev
 
 token.validitySeconds: 14400 # 4 hours
