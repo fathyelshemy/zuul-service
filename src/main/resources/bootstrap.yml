@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: gateway-service
-  cloud:
-    config:
-      uri: http://${CONFIG_SERVER:localhost:8082}/
-  profiles:
-    active: ${ACTIVE_PROFILE:default}
