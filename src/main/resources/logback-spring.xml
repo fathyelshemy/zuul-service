@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="RABBITMQ_HOST" source="spring.rabbitmq.host" defaultValue="127.0.0.1"/>
+  <springProperty scope="context" name="RABBITMQ_PORT" source="spring.rabbitmq.port" defaultValue="5672"/>
+  <springProperty scope="context" name="RABBITMQ_USERNAME" source="spring.rabbitmq.username" defaultValue="guest"/>
+  <springProperty scope="context" name="RABBITMQ_PASSWORD" source="spring.rabbitmq.password" defaultValue="guest"/>
+  <springProperty scope="context" name="RABBITMQ_VHOST" source="spring.rabbitmq.virtual-host" defaultValue="/"/>
+
+  <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue=""/>
+
+  <property name="KIBANA_PATTERN" value="%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX' (UTC+0)', UTC}, [%X{X-B3-TraceId}, %X{X-B3-SpanId}], %-5level, ${APP_NAME}, %X{host}, %X{email}, %X{role}, %msg"/>
+  <property name="DEFAULT_PATTERN" value="%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX' (UTC+0)', UTC}, [%t] %-5level %logger{36} - %msg%n"/>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${DEFAULT_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="AMQP_APPENDER" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+    <layout>
+      <pattern>${KIBANA_PATTERN}</pattern>
+    </layout>
+    <host>${RABBITMQ_HOST}</host>
+    <port>${RABBITMQ_PORT}</port>
+    <username>${RABBITMQ_USERNAME}</username>
+    <password>${RABBITMQ_PASSWORD}</password>
+    <virtualHost>${RABBITMQ_VHOST}</virtualHost>
+    <exchangeName>logging.exchange</exchangeName>
+    <exchangeType>direct</exchangeType>
+    <applicationId>${APP_NAME}</applicationId>
+    <declareExchange>true</declareExchange>
+    <durable>true</durable>
+    <autoDelete>false</autoDelete>
+    <routingKeyPattern>combologs</routingKeyPattern>
+    <contentType>text/plain</contentType>
+    <contentEncoding>UTF-8</contentEncoding>
+    <generateId>false</generateId>
+    <deliveryMode>PERSISTENT</deliveryMode>
+    <charset>UTF-8</charset>
+    <senderPoolSize>3</senderPoolSize>
+    <maxSenderRetries>5</maxSenderRetries>
+  </appender>
+
+  <logger name="kibana-logger" additivity="false" level="info">
+    <appender-ref ref="AMQP_APPENDER"/>
+  </logger>
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

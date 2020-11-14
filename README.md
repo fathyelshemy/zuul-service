@@ -1,1 +1,4 @@
 # zuul-service
+
+/.idea/
+/.mvn/
